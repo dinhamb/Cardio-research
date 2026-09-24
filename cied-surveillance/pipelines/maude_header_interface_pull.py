@@ -92,6 +92,14 @@ TERM_PATTERNS = {
     "intermittent_connection": re.compile(r"intermittent\s+(?:connection|contact)", re.I),
     "cross_contact": re.compile(r"cross[- ]?contact|between\s+(?:the\s+)?contacts", re.I),
     "conductive_bridge": re.compile(r"conductive\s+bridge", re.I),
+    "localized_conductive_bridge": re.compile(
+        r"(?:conductive\s+bridge).{0,140}"
+        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|header|connector|lead\s+terminal|"
+        r"terminal\s+ring|spring\s+contact)|"
+        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|header|connector|lead\s+terminal|"
+        r"terminal\s+ring|spring\s+contact).{0,140}(?:conductive\s+bridge)",
+        re.I,
+    ),
     "current_leakage": re.compile(r"current\s+leak|leakage\s+(?:path|current)", re.I),
     "localized_current_leakage": re.compile(
         r"(?:current\s+leak(?:age)?|leakage\s+(?:path|current))\s+"
@@ -123,7 +131,7 @@ TERM_PATTERNS = {
 STRONG_INTERFACE_TERMS = {
     "header", "terminal_pin", "lead_pin", "connector_block", "connector_bore",
     "setscrew", "spring_contact", "under_insertion", "reseat_reconnect",
-    "intermittent_connection", "cross_contact", "conductive_bridge",
+    "intermittent_connection", "cross_contact",
     "ingress_contamination",
 }
 
@@ -156,7 +164,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/1.1"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
@@ -338,7 +346,7 @@ def simple_priority(matched: set[str], codes: set[str]) -> str:
     # is dominated by battery, capacitor and feedthrough narratives and must not
     # be mistaken for lead-terminal/header leakage.
     if matched & {
-        "cross_contact", "conductive_bridge",
+        "cross_contact", "localized_conductive_bridge",
         "localized_current_leakage", "intercontact_short",
     }:
         return "A_PHYSICAL_CROSS_CONTACT_CANDIDATE"
