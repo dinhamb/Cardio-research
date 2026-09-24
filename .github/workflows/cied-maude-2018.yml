@@ -1,0 +1,37 @@
+name: CIED MAUDE 2018 backfill
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/cied-maude-2018.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - name: Run 2018 header-interface pull
+        run: |
+          python cied-surveillance/pipelines/maude_header_interface_pull.py \
+            --periods 2018 \
+            --output-dir cied-surveillance/warehouse/maude-header-2018
+      - name: Show summary
+        if: always()
+        run: |
+          test -f cied-surveillance/warehouse/maude-header-2018/summary.json && cat cied-surveillance/warehouse/maude-header-2018/summary.json || true
+      - name: Upload artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maude-header-interface-2018
+          path: |
+            cied-surveillance/warehouse/maude-header-2018/header_interface_candidates.csv
+            cied-surveillance/warehouse/maude-header-2018/summary.json
+          retention-days: 14
+          compression-level: 9
