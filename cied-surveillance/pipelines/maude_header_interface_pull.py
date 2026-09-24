@@ -155,7 +155,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.7"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.7-probe"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
@@ -196,12 +196,20 @@ def collect_cied_devices(zip_path: Path) -> dict[str, list[dict[str, str]]]:
     zf, stream = open_first_zip_member(zip_path)
     try:
         reader = csv.reader(stream, delimiter="|")
+        layout_probed = False
         for row in reader:
             if len(row) < 31:
                 continue
             key = row[0].strip()
             if not key.isdigit():
                 continue
+
+            if not layout_probed:
+                # Temporary low-volume structural probe. Values are public MAUDE
+                # device fields and are truncated; remove after live layout is pinned.
+                probe = {i: row[i].strip()[:80] for i in range(min(len(row), 36))}
+                print(f"DEVICE_LAYOUT_PROBE field_count={len(row)} fields={probe}", flush=True)
+                layout_probed = True
 
             # FDA currently documents a fixed 48-field DEVICE layout.
             # Do not infer column shifts from field contents; doing so corrupted
