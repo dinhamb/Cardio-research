@@ -47,7 +47,13 @@ PATTERNS = {
         r"battery\s+(?:terminal\s+pin|terminal|post|spring\s+(?:contact|connector))", re.I
     ),
     "battery_interconnect": re.compile(
-        r"battery.{0,100}(?:hybrid|electronic(?:s)?\s+(?:module|assembly)|interconnect|open\s+connection)", re.I
+        r"(?:battery\s+(?:terminal(?:\s+pin)?|post|spring\s+(?:contact|connector)|interconnect))"
+        r".{0,120}(?:corrod|open\s+connection|failed|failure|broken|fractur|discontinu|high\s+resistan)|"
+        r"(?:corrod|open\s+connection|failed|failure|broken|fractur|discontinu|high\s+resistan)"
+        r".{0,120}(?:battery\s+(?:terminal(?:\s+pin)?|post|spring\s+(?:contact|connector)|interconnect))|"
+        r"(?:open\s+connection|discontinuity).{0,120}between\s+(?:the\s+)?battery\s+and\s+"
+        r"(?:the\s+)?(?:hybrid|electronic(?:s)?\s+(?:module|assembly))",
+        re.I,
     ),
     "abnormal_current_drain": re.compile(
         r"(?:abnormal|excess(?:ive)?|elevated|unexpected).{0,60}(?:current\s+(?:drain|draw|consumption))|"
@@ -85,7 +91,7 @@ def urls(period):
 def download(url,dest):
     if dest.exists() and dest.stat().st_size: return
     print("Downloading",url,flush=True)
-    req=urllib.request.Request(url,headers={"User-Agent":"Cardio-research-CIED-battery/0.2"})
+    req=urllib.request.Request(url,headers={"User-Agent":"Cardio-research-CIED-battery/0.3"})
     with urllib.request.urlopen(req,timeout=180) as r, dest.open("wb") as f:
         shutil.copyfileobj(r,f,1024*1024)
 
