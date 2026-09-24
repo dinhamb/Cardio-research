@@ -1,0 +1,19 @@
+# OS / editor
+.DS_Store
+*.log
+
+# Reproducible bulk/source caches
+cied-surveillance/data-raw/
+cied-surveillance/warehouse/
+
+# Analytical files
+*.duckdb
+*.duckdb.wal
+*.parquet
+
+# Bulk downloads / archives
+cied-surveillance/**/*.zip
+
+# Python
+__pycache__/
+*.pyc
