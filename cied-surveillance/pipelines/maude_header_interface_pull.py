@@ -105,9 +105,10 @@ TERM_PATTERNS = {
     ),
     "intercontact_short": re.compile(
         r"(?:short(?:ed|ing)?|short\s+circuit)\s+(?:between|across)\s+"
-        r".{0,100}(?:contacts?|rings?|poles?|terminals?)|"
-        r"(?:contacts?|rings?|poles?|terminals?).{0,100}"
-        r"(?:shorted\s+together|short\s+circuit\s+between)",
+        r"(?:the\s+)?(?:df[- ]?4\s+|df[- ]?1\s+|is[- ]?1\s+)?"
+        r"(?:connector\s+)?(?:contacts?|terminal\s+rings?|poles?)|"
+        r"(?:connector\s+contacts?|terminal\s+rings?|df[- ]?4\s+poles?)"
+        r".{0,80}(?:shorted\s+together|short\s+circuit)",
         re.I,
     ),
     "crosstalk": re.compile(r"cross[- ]?talk|crosstalk", re.I),
@@ -123,7 +124,7 @@ STRONG_INTERFACE_TERMS = {
     "header", "terminal_pin", "lead_pin", "connector_block", "connector_bore",
     "setscrew", "spring_contact", "under_insertion", "reseat_reconnect",
     "intermittent_connection", "cross_contact", "conductive_bridge",
-    "current_leakage", "ingress_contamination",
+    "ingress_contamination",
 }
 
 
@@ -155,7 +156,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.9"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/1.0"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
@@ -423,6 +424,7 @@ def main() -> None:
                             "problem_codes": ";".join(code_labels),
                             "priority_bucket": simple_priority(terms, codes),
                             "narrative_types": ";".join(txt["text_types"]),
+                            "narrative_report_dates": ";".join(sorted(set(txt["date_reports"]))),
                             "matching_narratives": " || ".join(txt["texts"]),
                         }
                     )
