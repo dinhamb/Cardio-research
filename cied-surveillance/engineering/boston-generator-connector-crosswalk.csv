@@ -16,3 +16,6 @@ Boston Scientific,MOMENTUM EL ICD,D120,,IS-1/DF-1,,boston_resonate_icd_manual,CO
 Boston Scientific,MOMENTUM EL ICD,D121,IS-1,IS-1/DF-1,,boston_resonate_icd_manual,CONFIRMED_PRIMARY,
 Boston Scientific,VIGILANT EL ICD,D232,,DF4,,boston_resonate_icd_manual,CONFIRMED_PRIMARY,
 Boston Scientific,VIGILANT EL ICD,D233,IS-1,DF4,,boston_resonate_icd_manual,CONFIRMED_PRIMARY,
+Boston Scientific,RESONATE EL ICD,D432,,DF4,,boston_resonate_icd_manual,CONFIRMED_PRIMARY,
+Boston Scientific,RESONATE EL ICD,D433,IS-1,DF4,,boston_resonate_icd_manual,CONFIRMED_PRIMARY,
+Boston Scientific,RESONATE X4 CRT-D,G447,IS-1,DF4,IS4,boston_resonate_crtd_manual,CONFIRMED_PRIMARY,
