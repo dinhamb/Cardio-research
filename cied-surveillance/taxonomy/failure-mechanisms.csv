@@ -40,3 +40,4 @@ DISLODGEMENT,lead_distal,Lead dislodgement,Macro- or micro-dislodgement causing 
 UNKNOWN_ENGINEERING,unknown,Engineering mechanism unresolved,Available evidence does not support a specific engineering mechanism
 RETURNED_PRODUCT_NORMAL,manufacturer_analysis,Returned product no fault found,Manufacturer analysis reports no confirmed product malfunction
 HEADER_FRETTING_PARTICLE_OXIDATION,generator_header,"Spring-contact/terminal-ring fretting with particle oxidation","Repeated micro-motion at lead terminal ring/spring contact causing wear particles that may accumulate/oxidize and contribute to intermittent contact or impedance excursions"
+HEADER_SPRING_CONTACT_DIMENSION_OOS,generator_header,"Spring-contact dimension out of specification","Returned-product analysis confirms spring-contact geometry outside specification with potential for suboptimal terminal-ring contact"
