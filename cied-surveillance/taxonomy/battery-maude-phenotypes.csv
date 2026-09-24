@@ -1,0 +1,12 @@
+battery_class,layer,narrative_cues,classification_rule
+CELL_LITHIUM_CLUSTER,cell_internal,"lithium cluster; lithium bridge; lithium bridging","Require explicit manufacturer/returned-product analysis or field-action language"
+CELL_LITHIUM_PLATING,cell_internal,"lithium plating; lithium re-plating; plated lithium","Require explicit technical analysis"
+CELL_INTERNAL_SHORT,cell_internal,"internal battery short; internal cell short; cell internal short","Do not classify generic electrical short"
+CELL_LATENT_LEAKAGE,cell_internal,"anode-cathode leakage; leakage path between anode and cathode; internal battery leakage path","Must localize leakage inside battery/cell"
+CELL_SEPARATOR_OR_BARRIER,cell_internal,"separator; electrode barrier; physical barrier between electrode layers","Design/process evidence alone is not a field failure"
+BATTERY_HEADER_OR_FEEDTHROUGH,battery_package,"battery header; battery feedthrough; battery hermeticity","Keep separate from CIED lead-connector header"
+BATTERY_TERMINAL_INTERCONNECT,battery_interconnect,"battery terminal pin; battery post; battery spring connector; battery-to-hybrid; battery-to-electronics","Require localization to battery electrical interconnect"
+ABNORMAL_CURRENT_DRAIN,generator_electronics,"abnormal current drain; current consumption; current draw","Separate normal expected current consumption from abnormal load"
+CAPACITOR_LOAD,generator_electronics,"capacitor charging; capacitor reform; reforming capacitor","Do not infer cell defect"
+TELEMETRY_OR_FIRMWARE_DRAIN,generator_electronics,"telemetry drain; communication drain; firmware battery; software battery","Require narrative support"
+PREMATURE_DEPLETION_ONLY,phenotype,"premature battery depletion; rapid battery depletion; accelerated depletion; unexpected battery depletion","Phenotype only unless another mechanism is demonstrated"
