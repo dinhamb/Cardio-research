@@ -51,3 +51,19 @@ Do not combine procedure-associated implant problems with late spontaneous conne
 ## Current seed
 
 `header-interface-adjudication-v1.csv` contains the first 25 manually reviewed 2026 event groups. It is a calibration set, not a prevalence estimate.
+
+
+## Duplicate hierarchy
+
+Exact normalized narrative hashes are only the first deduplication layer.
+
+A single clinical event may generate separate MDRs for the generator and lead with similar but non-identical wording. The 2025 calibration contains clear examples:
+- DYNAGEN X4 generator MDR + CapSureFix Novus lead MDR describing the same year-long high-impedance/suspected spring-contact episode.
+- paired generator/lead MDRs describing the same ~16-month intermittent impedance/threshold episode.
+
+Therefore final event counts should use:
+1. exact narrative hash,
+2. device/date/clinical-pattern candidate clustering,
+3. manual adjudication for high-value cohorts.
+
+Do not assume one MDR key or one exact-text hash equals one clinical event.
