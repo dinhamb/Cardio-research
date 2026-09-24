@@ -44,3 +44,17 @@ It is:
 `header/contact generation -> pre/post 2019-2020 enhancement -> IS-1 vs DF4 contact -> lead manufacturer/model -> implant age -> intermittent-impedance / LSS phenotype`
 
 The formal 2017 recall should be modelled separately as an **MV oversensing safety action** because it overlaps mechanistically but is not identical to the later high-impedance / spring-contact phenotype.
+
+## Quantitative bridge between the 2017 field action and later high-impedance reports
+
+The UK MHRA alert reported:
+- 184 MV-oversensing events worldwide at the time of the alert,
+- 31 known incidents of serious injury or death,
+- more than 60% of MV-oversensing reports involving Medtronic or Abbott pacing leads,
+- despite only about 12% of affected Boston generators being paired with those competitor leads in the cited US exposure data.
+
+The alert itself states that intermittency related to the lead or pacemaker-lead connection can create a transient high-impedance condition that alters the MV sensor signal.
+
+A subsequent 2019 retrospective hybrid-system study reported transient out-of-range impedance with safety switching in 9% of Boston pacemakers paired with Abbott/Medtronic leads versus 0% in the comparison device-lead combinations.
+
+These figures do not establish a universal failure rate, but they strengthen the rationale for treating lead-manufacturer pairing and terminal/header contact generation as first-class exposure variables.
