@@ -85,7 +85,7 @@ def urls(period):
 def download(url,dest):
     if dest.exists() and dest.stat().st_size: return
     print("Downloading",url,flush=True)
-    req=urllib.request.Request(url,headers={"User-Agent":"Cardio-research-CIED-battery/0.1"})
+    req=urllib.request.Request(url,headers={"User-Agent":"Cardio-research-CIED-battery/0.2"})
     with urllib.request.urlopen(req,timeout=180) as r, dest.open("wb") as f:
         shutil.copyfileobj(r,f,1024*1024)
 
@@ -200,7 +200,7 @@ def main():
                 "top_terms":termc.most_common(),"text_source":tu,"device_source":du}
     counts=Counter(r["event_text_hash"] for r in rows)
     for r in rows:r["event_text_group_size"]=str(counts[r["event_text_hash"]])
-    fields=["mdr_report_key","report_period","event_text_hash","event_text_group_size","manufacturer","brand",
+    fields=["mdr_report_key","report_period","event_text_hash","event_text_group_size","device_sequence_no","device_layout","manufacturer","brand",
         "generic_name","model","catalog","product_code","device_date_received","device_age_text",
         "device_availability","date_returned_to_manufacturer","device_evaluated","matched_terms","priority_bucket",
         "problem_codes","narrative_report_dates","matching_narratives"]
