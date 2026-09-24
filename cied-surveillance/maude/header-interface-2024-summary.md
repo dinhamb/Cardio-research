@@ -39,3 +39,15 @@ This seed is not yet a DF4-versus-DF1 comparison. Some events involve IS-1 pace/
 3. generator header generation,
 4. whether the device predates or postdates the stated 2020 header/contact enhancement,
 5. implant age and generator-change history where available.
+
+## Spring-contact candidate stratum
+
+After exact-narrative deduplication, the 2024 corpus contains 202 event groups carrying the spring-contact narrative term.
+
+Overlapping features within those 202 groups:
+- 132 contain high-impedance language,
+- 30 contain Lead Safety Switch / LSS language,
+- 30 explicitly mention a non-Boston / other-manufacturer lead,
+- 57 contain design-enhancement / enhanced-spring-contact / updated-header language.
+
+These counts are triage strata, not confirmed mechanism counts. Cross-device duplicate clustering remains important because a generator and a non-Boston lead can generate separate MDRs with differently worded narratives for one clinical event.
