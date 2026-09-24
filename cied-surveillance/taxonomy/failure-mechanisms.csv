@@ -39,3 +39,4 @@ FIXATION_HELIX_FAILURE,lead_distal,Fixation or helix failure,Failure damage or d
 DISLODGEMENT,lead_distal,Lead dislodgement,Macro- or micro-dislodgement causing clinically relevant change
 UNKNOWN_ENGINEERING,unknown,Engineering mechanism unresolved,Available evidence does not support a specific engineering mechanism
 RETURNED_PRODUCT_NORMAL,manufacturer_analysis,Returned product no fault found,Manufacturer analysis reports no confirmed product malfunction
+HEADER_FRETTING_PARTICLE_OXIDATION,generator_header,"Spring-contact/terminal-ring fretting with particle oxidation","Repeated micro-motion at lead terminal ring/spring contact causing wear particles that may accumulate/oxidize and contribute to intermittent contact or impedance excursions"
