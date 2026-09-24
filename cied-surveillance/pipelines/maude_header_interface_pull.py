@@ -155,7 +155,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.7-probe"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.8"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
@@ -196,7 +196,6 @@ def collect_cied_devices(zip_path: Path) -> dict[str, list[dict[str, str]]]:
     zf, stream = open_first_zip_member(zip_path)
     try:
         reader = csv.reader(stream, delimiter="|")
-        layout_probed = False
         for row in reader:
             if len(row) < 31:
                 continue
@@ -204,36 +203,58 @@ def collect_cied_devices(zip_path: Path) -> dict[str, list[dict[str, str]]]:
             if not key.isdigit():
                 continue
 
-            if not layout_probed:
-                # Temporary low-volume structural probe. Values are public MAUDE
-                # device fields and are truncated; remove after live layout is pinned.
-                probe = {i: row[i].strip()[:80] for i in range(min(len(row), 36))}
-                print(f"DEVICE_LAYOUT_PROBE field_count={len(row)} fields={probe}", flush=True)
-                layout_probed = True
-
-            # FDA currently documents a fixed 48-field DEVICE layout.
-            # Do not infer column shifts from field contents; doing so corrupted
-            # Device Age in the initial pilot.
-            def field(zero_index: int) -> str:
-                return row[zero_index].strip() if zero_index < len(row) else ""
-
-            rec = {
-                "mdr_report_key": key,
-                "device_event_key": field(1),
-                "implant_flag": field(2),
-                "device_sequence_no": field(4),
-                "device_date_received": field(5),
-                "brand": field(6),
-                "generic_name": field(7),
-                "manufacturer": field(8),
-                "model": field(19),
-                "catalog": field(20),
-                "device_availability": field(23),
-                "date_returned_to_manufacturer": field(24),
-                "product_code": field(25),
-                "device_age": field(26),
-                "device_evaluated": field(27),
-            }
+            # FDA bulk DEVICE layouts differ by era. The live 2026 file
+            # observed on 2026-09-24 has 34 fields and its Section-D device
+            # identity block is +3 relative to the older documented layout.
+            # Use explicit field-count layouts; never infer shifts from values.
+            if len(row) == 34:
+                layout_name = "CURRENT_34"
+                def field_current(idx: int) -> str:
+                    return row[idx].strip() if idx < len(row) else ""
+                rec = {
+                    "mdr_report_key": key,
+                    "device_event_key": field_current(1),
+                    "device_sequence_no": field_current(4),
+                    "device_date_received": field_current(8),
+                    "implant_flag": "",
+                    "brand": field_current(9),
+                    "generic_name": field_current(10),
+                    "manufacturer": field_current(11),
+                    "model": field_current(22),
+                    "catalog": field_current(23),
+                    "device_availability": field_current(26),
+                    "date_returned_to_manufacturer": field_current(27),
+                    "product_code": field_current(28),
+                    "device_age": field_current(29),
+                    "device_evaluated": field_current(30),
+                    "device_layout": layout_name,
+                }
+            elif len(row) >= 31:
+                # Legacy/documented layout retained for historical files;
+                # historical years are validated separately before promotion.
+                layout_name = "LEGACY_DOCUMENTED"
+                def field_legacy(idx: int) -> str:
+                    return row[idx].strip() if idx < len(row) else ""
+                rec = {
+                    "mdr_report_key": key,
+                    "device_event_key": field_legacy(1),
+                    "device_sequence_no": field_legacy(4),
+                    "device_date_received": field_legacy(5),
+                    "implant_flag": field_legacy(2),
+                    "brand": field_legacy(6),
+                    "generic_name": field_legacy(7),
+                    "manufacturer": field_legacy(8),
+                    "model": field_legacy(19),
+                    "catalog": field_legacy(20),
+                    "device_availability": field_legacy(23),
+                    "date_returned_to_manufacturer": field_legacy(24),
+                    "product_code": field_legacy(25),
+                    "device_age": field_legacy(26),
+                    "device_evaluated": field_legacy(27),
+                    "device_layout": layout_name,
+                }
+            else:
+                continue
             if likely_cied(rec):
                 out[key].append(rec)
     finally:
@@ -420,7 +441,7 @@ def main() -> None:
         fieldnames = [
             "mdr_report_key", "report_period", "event_text_hash", "event_text_group_size",
             "device_event_key", "device_sequence_no", "device_date_received",
-            "implant_flag", "manufacturer", "brand",
+            "device_layout", "implant_flag", "manufacturer", "brand",
             "generic_name", "model", "catalog", "product_code", "device_age",
             "device_availability", "date_returned_to_manufacturer",
             "device_evaluated", "matched_terms", "problem_codes",
