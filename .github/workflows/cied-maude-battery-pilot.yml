@@ -1,0 +1,34 @@
+name: CIED battery mechanism pilot
+on:
+  push:
+    branches: [main]
+    paths:
+      - "cied-surveillance/pipelines/maude_battery_pull.py"
+      - ".github/workflows/cied-maude-battery-pilot.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - name: Run current battery mechanism pull
+        run: |
+          python cied-surveillance/pipelines/maude_battery_pull.py \
+            --periods current \
+            --output-dir cied-surveillance/warehouse/maude-battery-pilot
+      - name: Show summary
+        if: always()
+        run: |
+          test -f cied-surveillance/warehouse/maude-battery-pilot/summary.json && cat cied-surveillance/warehouse/maude-battery-pilot/summary.json || true
+      - name: Upload candidates
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maude-battery-mechanism-pilot
+          path: |
+            cied-surveillance/warehouse/maude-battery-pilot/battery_candidates.csv
+            cied-surveillance/warehouse/maude-battery-pilot/summary.json
+          retention-days: 14
