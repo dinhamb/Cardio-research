@@ -88,6 +88,24 @@ TERM_PATTERNS = {
     "cross_contact": re.compile(r"cross[- ]?contact|between\s+(?:the\s+)?contacts", re.I),
     "conductive_bridge": re.compile(r"conductive\s+bridge", re.I),
     "current_leakage": re.compile(r"current\s+leak|leakage\s+(?:path|current)", re.I),
+    "localized_current_leakage": re.compile(
+        r"(?:current\s+leak|leakage\s+(?:path|current)).{0,160}"
+        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|lead\s+terminal|terminal\s+ring|"
+        r"connector(?:\s+(?:block|bore|port))?|header|spring\s+contact|set\s*-?\s*screw)|"
+        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|lead\s+terminal|terminal\s+ring|"
+        r"connector(?:\s+(?:block|bore|port))?|header|spring\s+contact|set\s*-?\s*screw)"
+        r".{0,160}(?:current\s+leak|leakage\s+(?:path|current))",
+        re.I,
+    ),
+    "intercontact_short": re.compile(
+        r"(?:short(?:ed|ing)?|electrical\s+short).{0,160}"
+        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|lead\s+terminal|terminal\s+ring|"
+        r"connector(?:\s+(?:block|bore|port))?|header|spring\s+contact)|"
+        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|lead\s+terminal|terminal\s+ring|"
+        r"connector(?:\s+(?:block|bore|port))?|header|spring\s+contact)"
+        r".{0,160}(?:short(?:ed|ing)?|electrical\s+short)",
+        re.I,
+    ),
     "crosstalk": re.compile(r"cross[- ]?talk|crosstalk", re.I),
     "ingress_contamination": re.compile(
         r"(?:fluid|blood|moisture)\s+(?:ingress|entry|inside)|"
@@ -133,7 +151,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.3"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.4"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
@@ -256,17 +274,25 @@ def collect_problem_codes(zip_path: Path, keep_keys: set[str]) -> dict[str, set[
 
 
 def simple_priority(matched: set[str], codes: set[str]) -> str:
-    if matched & {"cross_contact", "conductive_bridge", "current_leakage"}:
+    # Physical cross-contact is intentionally strict. Generic "current leakage"
+    # is dominated by battery, capacitor and feedthrough narratives and must not
+    # be mistaken for lead-terminal/header leakage.
+    if matched & {
+        "cross_contact", "conductive_bridge",
+        "localized_current_leakage", "intercontact_short",
+    }:
         return "A_PHYSICAL_CROSS_CONTACT_CANDIDATE"
     if matched & STRONG_INTERFACE_TERMS:
         return "B_INTERFACE_CANDIDATE"
     if "crosstalk" in matched:
         return "C_CROSSTALK_SIGNAL_ONLY_CANDIDATE"
+    if "current_leakage" in matched:
+        return "D_NON_INTERFACE_CURRENT_LEAKAGE_CANDIDATE"
     if "arc_over" in matched:
-        return "D_HEADER_NONLEAD_OR_UNRESOLVED"
+        return "E_HEADER_NONLEAD_OR_UNRESOLVED"
     if codes & {"1371", "1399", "2900", "2926"}:
         return "B_INTERFACE_CANDIDATE"
-    return "E_LOW_SPECIFICITY"
+    return "F_LOW_SPECIFICITY"
 
 
 def main() -> None:
