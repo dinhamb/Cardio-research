@@ -89,21 +89,20 @@ TERM_PATTERNS = {
     "conductive_bridge": re.compile(r"conductive\s+bridge", re.I),
     "current_leakage": re.compile(r"current\s+leak|leakage\s+(?:path|current)", re.I),
     "localized_current_leakage": re.compile(
-        r"(?:current\s+leak|leakage\s+(?:path|current)).{0,160}"
-        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|lead\s+terminal|terminal\s+ring|"
-        r"connector(?:\s+(?:block|bore|port))?|header|spring\s+contact|set\s*-?\s*screw)|"
-        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|lead\s+terminal|terminal\s+ring|"
-        r"connector(?:\s+(?:block|bore|port))?|header|spring\s+contact|set\s*-?\s*screw)"
-        r".{0,160}(?:current\s+leak|leakage\s+(?:path|current))",
+        r"(?:current\s+leak(?:age)?|leakage\s+(?:path|current))\s+"
+        r"(?:at|through|across|between|within)\s+(?:the\s+)?"
+        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|header|connector|lead\s+terminal|"
+        r"terminal\s+ring|spring\s+contact)|"
+        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|header|connector|lead\s+terminal|"
+        r"terminal\s+ring|spring\s+contact)\s+"
+        r"(?:current\s+leak(?:age)?|leakage\s+(?:path|current))",
         re.I,
     ),
     "intercontact_short": re.compile(
-        r"(?:short(?:ed|ing)?|electrical\s+short).{0,160}"
-        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|lead\s+terminal|terminal\s+ring|"
-        r"connector(?:\s+(?:block|bore|port))?|header|spring\s+contact)|"
-        r"(?:df[- ]?4|df[- ]?1|is[- ]?1|lead\s+terminal|terminal\s+ring|"
-        r"connector(?:\s+(?:block|bore|port))?|header|spring\s+contact)"
-        r".{0,160}(?:short(?:ed|ing)?|electrical\s+short)",
+        r"(?:short(?:ed|ing)?|short\s+circuit)\s+(?:between|across)\s+"
+        r".{0,100}(?:contacts?|rings?|poles?|terminals?)|"
+        r"(?:contacts?|rings?|poles?|terminals?).{0,100}"
+        r"(?:shorted\s+together|short\s+circuit\s+between)",
         re.I,
     ),
     "crosstalk": re.compile(r"cross[- ]?talk|crosstalk", re.I),
@@ -151,7 +150,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.4"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.5"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
