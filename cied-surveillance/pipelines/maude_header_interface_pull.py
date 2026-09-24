@@ -21,6 +21,7 @@ import csv
 import io
 import json
 import re
+import hashlib
 import shutil
 import tempfile
 import time
@@ -150,7 +151,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.5"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.6"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
@@ -272,6 +273,21 @@ def collect_problem_codes(zip_path: Path, keep_keys: set[str]) -> dict[str, set[
     return out
 
 
+def narrative_event_hash(texts: list[str]) -> str:
+    """Exact-ish event cluster for duplicate MDRs filed against multiple devices.
+
+    This intentionally does not perform fuzzy clustering. It normalizes whitespace,
+    case and duplicate narrative blocks, then hashes the remaining narrative set.
+    """
+    normalized = []
+    for text in texts:
+        t = re.sub(r"\s+", " ", text).strip().lower()
+        if t:
+            normalized.append(t)
+    canonical = " || ".join(sorted(set(normalized)))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:20]
+
+
 def simple_priority(matched: set[str], codes: set[str]) -> str:
     # Physical cross-contact is intentionally strict. Generic "current leakage"
     # is dominated by battery, capacitor and feedthrough narratives and must not
@@ -358,6 +374,7 @@ def main() -> None:
                         {
                             **device,
                             "report_period": period,
+                            "event_text_hash": narrative_event_hash(txt["texts"]),
                             "matched_terms": ";".join(sorted(terms)),
                             "problem_codes": ";".join(code_labels),
                             "priority_bucket": simple_priority(terms, codes),
@@ -376,8 +393,13 @@ def main() -> None:
                 "device_source": device_url,
             }
 
+        event_hash_counts = Counter(r["event_text_hash"] for r in rows_out)
+        for row in rows_out:
+            row["event_text_group_size"] = str(event_hash_counts[row["event_text_hash"]])
+
         fieldnames = [
-            "mdr_report_key", "report_period", "manufacturer", "brand",
+            "mdr_report_key", "report_period", "event_text_hash", "event_text_group_size",
+            "manufacturer", "brand",
             "generic_name", "model", "catalog", "product_code", "device_age",
             "device_evaluated", "matched_terms", "problem_codes",
             "priority_bucket", "narrative_types", "matching_narratives",
@@ -390,6 +412,13 @@ def main() -> None:
 
         stats["n_output_rows"] = len(rows_out)
         stats["n_unique_mdr_keys"] = len({r["mdr_report_key"] for r in rows_out})
+        stats["n_unique_exact_narrative_event_groups"] = len(event_hash_counts)
+        stats["n_mdr_rows_in_duplicate_event_groups"] = sum(
+            n for n in event_hash_counts.values() if n > 1
+        )
+        stats["n_duplicate_event_groups"] = sum(
+            1 for n in event_hash_counts.values() if n > 1
+        )
         stats["priority_counts"] = dict(Counter(r["priority_bucket"] for r in rows_out))
         stats["candidate_csv"] = str(candidate_path)
 
