@@ -74,3 +74,17 @@ Then stratify confirmed + probable interface events by DF1/DF4, model family and
 ## Denominator warning
 
 MAUDE supplies a numerator-like signal corpus, not an incidence denominator. Manufacturer performance reports or other exposure datasets must be joined separately before any rate comparison.
+
+
+## Pilot filter lesson — 2026-09-24
+
+The first current-year bulk pilot showed that the phrase `current leakage` by itself is **not** specific for the lead-header interface. Strong false positives included:
+
+- battery-internal anode/cathode leakage with lithium re-plating,
+- generator feedthrough leakage,
+- high-voltage capacitor leakage,
+- narratives explicitly documenting *no* current leakage.
+
+The pipeline therefore requires connector-localised language near leakage/short terms for the highest-priority physical cross-contact bucket. Generic current-leakage narratives are diverted to a non-interface bucket.
+
+Conversely, the broad narrative layer contains highly specific lead-header events that structured codes alone would not distinguish, including incomplete lead-pin seating, displaced connector spring contacts, setscrew/header failures, connector-bore obstruction, and blood/moisture within connector ports.
