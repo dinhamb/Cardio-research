@@ -155,7 +155,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.8"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.9"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
@@ -225,7 +225,7 @@ def collect_cied_devices(zip_path: Path) -> dict[str, list[dict[str, str]]]:
                     "device_availability": field_current(26),
                     "date_returned_to_manufacturer": field_current(27),
                     "product_code": field_current(28),
-                    "device_age": field_current(29),
+                    "device_age_text": field_current(29),
                     "device_evaluated": field_current(30),
                     "device_layout": layout_name,
                 }
@@ -249,7 +249,7 @@ def collect_cied_devices(zip_path: Path) -> dict[str, list[dict[str, str]]]:
                     "device_availability": field_legacy(23),
                     "date_returned_to_manufacturer": field_legacy(24),
                     "product_code": field_legacy(25),
-                    "device_age": field_legacy(26),
+                    "device_age_text": field_legacy(26),
                     "device_evaluated": field_legacy(27),
                     "device_layout": layout_name,
                 }
@@ -286,11 +286,11 @@ def collect_text_candidates(zip_path: Path, cied_keys: set[str]) -> dict[str, di
                 continue
             rec = out.setdefault(
                 key,
-                {"matched_terms": set(), "texts": [], "text_types": []},
+                {"matched_terms": set(), "texts": [], "text_types": [], "date_reports": []},
             )
             rec["matched_terms"].update(matches)
             rec["texts"].append(text[:100_000])
-            rec["text_types"].append(text_type)
+            rec["text_types"].append(text_type)\n            if date_report:\n                rec["date_reports"].append(date_report)
     finally:
         stream.close()
         zf.close()
@@ -442,10 +442,10 @@ def main() -> None:
             "mdr_report_key", "report_period", "event_text_hash", "event_text_group_size",
             "device_event_key", "device_sequence_no", "device_date_received",
             "device_layout", "implant_flag", "manufacturer", "brand",
-            "generic_name", "model", "catalog", "product_code", "device_age",
+            "generic_name", "model", "catalog", "product_code", "device_age_text",
             "device_availability", "date_returned_to_manufacturer",
             "device_evaluated", "matched_terms", "problem_codes",
-            "priority_bucket", "narrative_types", "matching_narratives",
+            "priority_bucket", "narrative_types", "narrative_report_dates", "matching_narratives",
         ]
         candidate_path = output_dir / "header_interface_candidates.csv"
         with candidate_path.open("w", encoding="utf-8", newline="") as f:
