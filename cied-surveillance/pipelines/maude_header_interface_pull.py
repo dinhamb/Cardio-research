@@ -66,6 +66,10 @@ CIED_DEVICE_RE = re.compile(
     r"defibrillation lead|permanent defibrillator electrode|pacing lead)",
     re.I,
 )
+NON_CIED_DIVISION_RE = re.compile(
+    r"(neuromodulation|vascular|structural heart|diabetes|neurovascular)",
+    re.I,
+)
 
 TERM_PATTERNS = {
     "header": re.compile(r"\bheader\b", re.I),
@@ -151,7 +155,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.6"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.7"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
@@ -173,9 +177,17 @@ def likely_cied(rec: dict[str, str]) -> bool:
     haystack = " ".join(
         rec[k] for k in ("brand", "generic_name", "manufacturer", "model")
     )
-    if code in CIED_PRODUCT_CODES and CIED_MANUFACTURER_RE.search(haystack):
+    if NON_CIED_DIVISION_RE.search(haystack):
+        return False
+    if CIED_MANUFACTURER_RE.search(haystack) and CIED_DEVICE_RE.search(haystack):
         return True
-    return bool(CIED_MANUFACTURER_RE.search(haystack) and CIED_DEVICE_RE.search(haystack))
+    # Known product codes are a fallback only when the device name/brand still
+    # contains a cardiac-rhythm cue; manufacturer name alone is not sufficient.
+    if code in CIED_PRODUCT_CODES and CIED_MANUFACTURER_RE.search(haystack):
+        return bool(re.search(r"(cardiac|pace|pacer|icd|crt|defib|assurity|endury|"
+                              r"gallant|cobalt|crome|percepta|sprint|emblem|momentum|"
+                              r"inogen|rivacor|ilesto|intica)", haystack, re.I))
+    return False
 
 
 def collect_cied_devices(zip_path: Path) -> dict[str, list[dict[str, str]]]:
@@ -191,25 +203,25 @@ def collect_cied_devices(zip_path: Path) -> dict[str, list[dict[str, str]]]:
             if not key.isdigit():
                 continue
 
-            # FDA's published layout places Brand Name at field 7 and
-            # Device Report Product Code at field 26 (one-based). The live
-            # 2026 device file has three additional pre-brand fields, shifting
-            # the Section-D block by +3. Detect the live layout from the
-            # product-code slot rather than hard-coding one generation.
-            extended = len(row) >= 34 and bool(re.fullmatch(r"[A-Z]{3}", row[28].strip()))
-            shift = 3 if extended else 0
-
-            def field(base_zero_index: int) -> str:
-                idx = base_zero_index + shift
-                return row[idx].strip() if idx < len(row) else ""
+            # FDA currently documents a fixed 48-field DEVICE layout.
+            # Do not infer column shifts from field contents; doing so corrupted
+            # Device Age in the initial pilot.
+            def field(zero_index: int) -> str:
+                return row[zero_index].strip() if zero_index < len(row) else ""
 
             rec = {
                 "mdr_report_key": key,
+                "device_event_key": field(1),
+                "implant_flag": field(2),
+                "device_sequence_no": field(4),
+                "device_date_received": field(5),
                 "brand": field(6),
                 "generic_name": field(7),
                 "manufacturer": field(8),
                 "model": field(19),
                 "catalog": field(20),
+                "device_availability": field(23),
+                "date_returned_to_manufacturer": field(24),
                 "product_code": field(25),
                 "device_age": field(26),
                 "device_evaluated": field(27),
@@ -399,8 +411,10 @@ def main() -> None:
 
         fieldnames = [
             "mdr_report_key", "report_period", "event_text_hash", "event_text_group_size",
-            "manufacturer", "brand",
+            "device_event_key", "device_sequence_no", "device_date_received",
+            "implant_flag", "manufacturer", "brand",
             "generic_name", "model", "catalog", "product_code", "device_age",
+            "device_availability", "date_returned_to_manufacturer",
             "device_evaluated", "matched_terms", "problem_codes",
             "priority_bucket", "narrative_types", "matching_narratives",
         ]
