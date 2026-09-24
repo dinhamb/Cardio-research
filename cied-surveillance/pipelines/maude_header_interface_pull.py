@@ -133,7 +133,7 @@ def download(url: str, dest: Path) -> None:
     if dest.exists() and dest.stat().st_size > 0:
         return
     print(f"Downloading {url}", flush=True)
-    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.2"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Cardio-research-CIED/0.3"})
     with urllib.request.urlopen(req, timeout=180) as response, dest.open("wb") as f:
         shutil.copyfileobj(response, f, length=1024 * 1024)
     print(f"Downloaded {dest.name}: {dest.stat().st_size:,} bytes", flush=True)
