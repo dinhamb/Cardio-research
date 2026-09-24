@@ -1,0 +1,41 @@
+code,domain,label,definition
+CELL_INTERNAL_SHORT,generator_battery,Cell internal short,Confirmed or suspected internal electrical short within the battery cell
+CELL_LITHIUM_BRIDGING,generator_battery,Lithium bridging or clustering,Metallic lithium growth or clustering implicated in an internal battery short
+CELL_LITHIUM_PLATING,generator_battery,Lithium plating with self-depletion,Lithium plating identified within the cell and linked to elevated internal self-depletion
+CELL_LATENT_LEAKAGE,generator_battery,Latent anode-cathode leakage path,Internal battery leakage path developing between anode and cathode with or without lithium re-plating
+CELL_SEPARATOR_FAILURE,generator_battery,Separator or electrode-barrier failure,Failure or inadequate separation permitting abnormal internal current path
+CELL_SEAL_ELECTROLYTE,generator_battery,Cell seal or electrolyte failure,Cell-level seal degradation leakage or electrolyte-related failure
+BATTERY_HEADER_FAILURE,generator_battery_package,Battery header failure,Failure involving the battery cell header rather than the CIED lead connector header
+BATTERY_FEEDTHROUGH_FAILURE,generator_battery_package,Battery feedthrough failure,Electrical leakage mechanical damage corrosion or hermetic failure at battery feedthrough
+BATTERY_TERMINAL_PIN_CORROSION,generator_battery_interconnect,Battery terminal pin corrosion,Corrosion of a battery terminal pin disrupting connection to generator electronics
+BATTERY_INTERCONNECT_FAILURE,generator_battery_interconnect,Battery-to-hybrid interconnect failure,Abnormal connection between battery terminals/posts and electronic module or hybrid
+PREMATURE_DEPLETION_UNSPECIFIED,generator_battery,Premature depletion unspecified,Unexpected battery depletion without a demonstrated cell mechanism
+ABNORMAL_CURRENT_DRAIN,generator_electronics,Abnormal electronic current drain,Excess current consumption attributable to device electronics or circuitry
+CAPACITOR_DRAIN,generator_electronics,Capacitor related drain,Unexpected depletion associated with capacitor charging reforming or capacitor subsystem
+TELEMETRY_DRAIN,generator_electronics,Telemetry related drain,Unexpected battery consumption associated with telemetry or communications activity
+FIRMWARE_DRAIN,generator_electronics,Firmware or software related drain,Unexpected battery consumption caused or suspected to be caused by firmware/software behaviour
+FEEDTHROUGH_LEAK,generator_package,Generator feedthrough or hermetic failure,Electrical or fluid leakage associated with the generator can feedthrough or hermetic interface
+CAN_WELD_PACKAGE,generator_package,Can weld or package integrity failure,Loss of generator package integrity involving enclosure weld or can
+HEADER_SEAL_INGRESS,generator_header,CIED header or seal ingress,Fluid ingress or compromised sealing involving the generator lead-connector header
+HEADER_PIN_UNDERINSERTION,generator_header,Lead terminal pin under-insertion,Lead terminal pin incompletely seated in the intended connector bore
+HEADER_PIN_MISCONNECTION,generator_header,Lead terminal pin misconnection,Lead terminal pin inserted or attached incorrectly in the generator header
+HEADER_BORE_OBSTRUCTION,generator_header,Header bore insertion problem,Difficulty seating a lead due to bore geometry obstruction contamination or dimensional issue
+HEADER_CONTACT_INTERMITTENT,generator_header,Intermittent header contact,Intermittent electrical connection at terminal ring spring contact or connector block
+HEADER_SPRING_CONTACT_FAILURE,generator_header,Header spring-contact failure,Failure deformation corrosion or dysfunction of spring contact elements within connector block
+HEADER_SETSCREW_INTERFACE,generator_header,Setscrew interface failure,Abnormal terminal fixation or electrical contact involving setscrew or setscrew block
+HEADER_CONTACT_INTERFACE,generator_header,Header contact interface failure,Generic abnormal electrical contact at the generator header when a more specific mechanism is not supported
+HEADER_ARCOVER,generator_header,Electrical arc-over within header,Electrical arc or flashover involving generator-header components
+INTER_CONTACT_LEAKAGE,connector_system,Inter-contact current leakage,Current leakage between normally isolated connector poles or contact regions
+INTER_CONTACT_SHORT,connector_system,Inter-contact short circuit,Electrical short between connector poles or contact regions
+CONNECTOR_SEAL_DEGRADATION,lead_connector,Connector seal degradation,Ageing damage or failure of lead-carried connector sealing elements
+CONNECTOR_TERMINAL_DAMAGE,lead_connector,Connector terminal damage,Mechanical damage cracking deformation or wear of lead terminal body or contact region
+CONNECTOR_CROSS_CONTACT,lead_connector,Inter-contact contamination or cross-contact,Physical contamination fluid bridge or material failure creating abnormal interaction between contact regions
+CROSSTALK_SIGNAL_ONLY,electrical_manifestation,Crosstalk signal without proven physical leakage,Reported crosstalk or cross-channel sensing without evidence of current leakage or a connector short
+CONDUCTOR_FRACTURE,lead_body,Conductor fracture,Mechanical conductor fracture or discontinuity
+INSULATION_BREACH_OUTER,lead_body,Outer insulation breach,Failure of external lead-body insulation
+INSULATION_BREACH_INNER,lead_body,Inner or conductor insulation breach,Failure of insulation separating conductors or internal electrical elements
+COIL_CONDUCTOR_FAILURE,lead_body,Shock coil or high-voltage conductor failure,Failure involving shock coil or high-voltage conductor path
+FIXATION_HELIX_FAILURE,lead_distal,Fixation or helix failure,Failure damage or dysfunction of active fixation mechanism
+DISLODGEMENT,lead_distal,Lead dislodgement,Macro- or micro-dislodgement causing clinically relevant change
+UNKNOWN_ENGINEERING,unknown,Engineering mechanism unresolved,Available evidence does not support a specific engineering mechanism
+RETURNED_PRODUCT_NORMAL,manufacturer_analysis,Returned product no fault found,Manufacturer analysis reports no confirmed product malfunction
