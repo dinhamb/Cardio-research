@@ -280,6 +280,7 @@ def collect_text_candidates(zip_path: Path, cied_keys: set[str]) -> dict[str, di
             if key not in cied_keys:
                 continue
             text_type = row[2].strip()
+            date_report = row[4].strip()
             text = row[5].strip()
             matches = text_matches(text)
             if not matches:
@@ -290,7 +291,9 @@ def collect_text_candidates(zip_path: Path, cied_keys: set[str]) -> dict[str, di
             )
             rec["matched_terms"].update(matches)
             rec["texts"].append(text[:100_000])
-            rec["text_types"].append(text_type)\n            if date_report:\n                rec["date_reports"].append(date_report)
+            rec["text_types"].append(text_type)
+            if date_report:
+                rec["date_reports"].append(date_report)
     finally:
         stream.close()
         zf.close()
