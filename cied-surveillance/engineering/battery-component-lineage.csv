@@ -1,0 +1,25 @@
+battery_component_id,device_manufacturer,device_family,market_release_year,battery_supplier,cell_model,chemistry,capacity_ah,evidence_source_id,evidence_level,notes
+batt_biotronik_lumax300_litronik,Biotronik,Lumax 300,2006,Litronik,LiS 3182 (K7/R6),Li/MnO2,1.28,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Table lists Litronik and Greatbatch battery configurations for family; treat as alternate configurations until exact model/region mapping is resolved"
+batt_biotronik_lumax300_greatbatch,Biotronik,Lumax 300,2006,Greatbatch,GB 2491,Li/CFx-SVO,1.72,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Alternate listed battery configuration"
+batt_biotronik_lumax340_litronik,Biotronik,Lumax 340,2006,Litronik,LiS 3182 (K7/R6),Li/MnO2,1.28,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Alternate supplier configuration also listed"
+batt_biotronik_lumax340_greatbatch,Biotronik,Lumax 340,2006,Greatbatch,GB 2491,Li/CFx-SVO,1.72,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Alternate listed battery configuration"
+batt_biotronik_lumax540_litronik,Biotronik,Lumax 540,2008,Litronik,LiS 3192 R7,Li/MnO2,1.72,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Recent-generation cohort in source"
+batt_biotronik_lumax540_greatbatch,Biotronik,Lumax 540,2008,Greatbatch,GB 2491,Li/CFx-SVO,1.72,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Alternate listed battery configuration"
+batt_boston_renewal,Boston Scientific,Renewal,2004,Greatbatch,2000,Li/SVO,2.00,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_boston_livian,Boston Scientific,Livian,2007,Greatbatch,2500,Li/CFx-SVO,1.86,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_boston_cognis,Boston Scientific,Cognis,2008,Boston Scientific,401988,Li/MnO2,1.84,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Evidence of an in-house/brand-labelled battery configuration in this generation"
+batt_medtronic_insync_iii_marquis,Medtronic,InSync III Marquis,2003,Medtronic,161253,Li/SVO,0.90,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_medtronic_insync_sentry,Medtronic,InSync Sentry,2004,Medtronic,161253,Li/SVO,0.89,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_medtronic_insync_maximo,Medtronic,InSync Maximo,2005,Medtronic,161253,Li/SVO,0.89,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_medtronic_concerto,Medtronic,Concerto,2006,Medtronic,161455,Li/SVO,1.00,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_medtronic_consulta,Medtronic,Consulta,2008,Medtronic,161455,Li/SVO,1.00,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_medtronic_maximo_ii,Medtronic,Maximo II,2008,Medtronic,161455,Li/SVO,1.00,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_medtronic_protecta,Medtronic,Protecta,2010,Medtronic,161455,Li/SVO,1.00,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_sorin_ovatio,Sorin,Ovatio,2005,Greatbatch,WGL 2393,Li/SVO,0.87,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_sorin_paradym,Sorin,Paradym,2008,Greatbatch,GB 2593,Li/CFx-SVO,1.96,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_stjude_atlas_2255,St Jude Medical,Atlas,2003,Greatbatch,2255,Li/SVO,,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Source lists multiple Greatbatch cell models within family; exact device-model mapping unresolved"
+batt_stjude_atlas_2150,St Jude Medical,Atlas,2003,Greatbatch,2150,Li/SVO,,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Alternate listed cell"
+batt_stjude_epic,St Jude Medical,Epic,2006,Greatbatch,2150,Li/SVO,,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,
+batt_stjude_promote_2555,St Jude Medical,Promote,2007,Greatbatch,2555,Li/SVO,,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Source lists two cell models; exact device-model mapping unresolved"
+batt_stjude_promote_2356,St Jude Medical,Promote,2007,Greatbatch,2356,Li/SVO,,europace_crtd_battery_table_2015,SECONDARY_FROM_DEVICE_MANUALS,"Alternate listed cell"
+batt_biotronik_actros_kairos_lis3150,Biotronik,Actros+ / Kairos,2001,Litronik,LiS 3150,UNRESOLVED_PUBLIC_SOURCE,,fda_biotronik_lis3150_2001,PRIMARY_REGULATORY,"FDA supplement explicitly approves Litronik LiS 3150 use in these pulse-generator families"
