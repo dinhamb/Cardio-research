@@ -1,0 +1,44 @@
+name: Boston ACCOLADE PaceSafe MAUDE sweep
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/boston-pacesafe-maude.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk:
+          - "2015 2016 2017 2018 2019"
+          - "2020 2021 2022 2023 2024"
+          - "2025 current"
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set label
+        run: echo "LABEL=$(echo '${{ matrix.chunk }}' | tr ' ' '-')" >> "$GITHUB_ENV"
+      - name: Run sweep
+        run: |
+          python cied-surveillance/pipelines/maude_boston_pacesafe_pull.py \
+            --periods ${{ matrix.chunk }} \
+            --output-dir cied-surveillance/warehouse/boston-pacesafe-${{ env.LABEL }}
+      - name: Show summary
+        if: always()
+        run: cat cied-surveillance/warehouse/boston-pacesafe-${{ env.LABEL }}/summary.json || true
+      - name: Upload artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boston-pacesafe-${{ env.LABEL }}
+          path: |
+            cied-surveillance/warehouse/boston-pacesafe-${{ env.LABEL }}/pacesafe_candidates.csv
+            cied-surveillance/warehouse/boston-pacesafe-${{ env.LABEL }}/summary.json
+          retention-days: 14
