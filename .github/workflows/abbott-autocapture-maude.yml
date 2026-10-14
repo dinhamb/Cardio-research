@@ -35,14 +35,14 @@ jobs:
       - name: Show summary
         if: always()
         run: |
-          test -f cied-surveillance/warehouse/autocapture-$LABEL/summary.json && cat cied-surveillance/warehouse/autocapture-$LABEL/summary.json || true
+          test -f cied-surveillance/warehouse/autocapture-${{ env.LABEL }}/summary.json && cat cied-surveillance/warehouse/autocapture-${{ env.LABEL }}/summary.json || true
       - name: Upload artifact
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: abbott-autocapture-$LABEL
+          name: abbott-autocapture-${{ env.LABEL }}
           path: |
-            cied-surveillance/warehouse/autocapture-$LABEL/autocapture_candidates.csv
-            cied-surveillance/warehouse/autocapture-$LABEL/summary.json
+            cied-surveillance/warehouse/autocapture-${{ env.LABEL }}/autocapture_candidates.csv
+            cied-surveillance/warehouse/autocapture-${{ env.LABEL }}/summary.json
           retention-days: 14
           compression-level: 9
